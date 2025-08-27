@@ -1,0 +1,3 @@
+model,resume_file,prompt_tokens,completion_tokens,total_tokens,response_time_sec,estimated_cost_usd,response_snippet
+Meta Llama 3/70b (Free version),Lorenzo Balsano - Resume Frontend Engineer.pdf,3335,2143,5478,20.59,0.0,"```json {   ""personal_info"": {     ""full_name"": ""Lorenzo Balsano"",     ""email"": ""lorenzo.balsano89@gmail.com"",     ""phone"": ""+393482252191"",     ""location"": ""Bagheria, Italy"",     ""linkedin"": null,   "
+GPT-4o mini,Lorenzo Balsano - Resume Frontend Engineer.pdf,2706,1711,4417,28.04,0.0014,"{   ""personal_info"": {     ""full_name"": ""Lorenzo Balsano"",     ""email"": ""lorenzo.balsano89@gmail.com"",     ""phone"": ""+393482252191"",     ""location"": ""Bagheria, Italy"",     ""linkedin"": null,     ""githu"
