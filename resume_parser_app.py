@@ -5,6 +5,7 @@ import os
 import time
 import pandas as pd
 from dotenv import load_dotenv
+import docx2txt
 
 load_dotenv()
 api_key = os.getenv("OPENROUTER_API_KEY")
@@ -12,15 +13,19 @@ api_key = os.getenv("OPENROUTER_API_KEY")
 client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
 
 MODELS = {
-    "Meta Llama 3/70b (Free version)": {
+    "Meta Llama 3/70b (Free)": {
         "id": "meta-llama/llama-3.3-70b-instruct:free",
-        "cost_per_token": 0.00,
+        "cost_per_1k": 0.00,
     },
-    "Claude 3.5 Sonnet": {
-        "id": "anthropic/claude-3.5-sonnet",
-        "cost_per_token": 0.00000727,
+    "Claude 3.5 Haiku": {
+        "id": "anthropic/claude-3.5-haiku",
+        "cost_per_1k": 0.001959,
     },
-    "GPT-4o mini": {"id": "openai/gpt-4o-mini", "cost_per_token": 0.000000328},
+    "GPT-4o mini": {"id": "openai/gpt-4o-mini", "cost_per_1k": 0.000000328},
+    "OpenAI: gpt-oss-120b": {
+        "id": "openai/gpt-oss-120b",
+        "cost_per_1k": 0.0003475,
+    },
 }
 
 st.title("AI Resume Parser & Benchmark Tool")
@@ -54,8 +59,9 @@ def save_log(entry):
 
 
 def calculate_cost(model_choice, input_tokens, output_tokens):
-    cost_per_token = MODELS[model_choice]["cost_per_token"]
-    return (input_tokens + output_tokens) * cost_per_token
+    total_tokens = input_tokens + output_tokens
+    cost_per_1k = MODELS[model_choice]["cost_per_1k"]
+    return (total_tokens / 1000) * cost_per_1k
 
 
 if st.button("Analyze Resume"):
@@ -65,6 +71,15 @@ if st.button("Analyze Resume"):
             doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
             for page in doc:
                 text_content += page.get_text()
+
+        elif uploaded_file.name.endswith(".docx"):
+            import tempfile
+
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
+                tmp.write(uploaded_file.read())
+                tmp_path = tmp.name
+
+                text_content = docx2txt.process(tmp_path)
         else:
             text_content = uploaded_file.read().decode("utf-8", errors="ignore")
 
